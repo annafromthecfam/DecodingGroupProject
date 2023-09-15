@@ -11,13 +11,32 @@ public class CompressedString : IEnumerable<char>
 
     public CompressedString(IEnumerable<char> original)
     {
+        int forCalulatingBackTrack = 0;
         foreach (char c in original)
         {
-            encoded.Add(c);
+            if (encoded.Contains(c))
+            {
+                for (int x = 0; x < original.Count(); x++)
+                {
+                    if (original.ElementAt(x) == c)
+                    {
+                        countsToTakeFromOriginal.Add(0);
+                        amountsToBacktrackInEncoded.Add(forCalulatingBackTrack - x);
+                        countsToCopyFromEncoded.Add(1);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                countsToTakeFromOriginal.Add(1);
+                amountsToBacktrackInEncoded.Add(0);
+                countsToCopyFromEncoded.Add(0);
+                encoded.Add(c);
+            }
+            forCalulatingBackTrack++;
         }
-        countsToTakeFromOriginal.Add(encoded.Size());
-        amountsToBacktrackInEncoded.Add(0);
-        countsToCopyFromEncoded.Add(0);
+        Console.WriteLine();
     }
 
     public static IEnumerable<T> Take<T>(IEnumerator<T> enumerator, int count)
